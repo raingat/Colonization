@@ -7,13 +7,22 @@ public class BotSpawner : GenericSpawner<Bot>
 
     [SerializeField] private float _heightSpawn;
 
+    [SerializeField] private BaseSpawner _baseSpawner;
+
     private List<Transform> _busyPlaces = new();
+
+    public void Initialize(BaseSpawner baseSpawner)
+    {
+        _baseSpawner = baseSpawner;
+    }
 
     protected override void HandleObject(Bot bot)
     {
         int randomPlace = Random.Range(0, _places.Count);
 
         bot.transform.position = new Vector3(_places[randomPlace].position.x, _heightSpawn, _places[randomPlace].position.z);
+
+        bot.Initialize(_baseSpawner);
 
         _busyPlaces.Add(_places[randomPlace]);
 

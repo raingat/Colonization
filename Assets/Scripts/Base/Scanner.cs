@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
@@ -11,13 +10,18 @@ public class Scanner : MonoBehaviour
 
     [SerializeField] private float _waitTime;
 
-    private Collider[] _findCollider;
+    [SerializeField] private StorageFoundResources _storageFoundResources;
 
-    public event Action<Resource> ResourceFound;
+    private Collider[] _findCollider;
 
     private void Start()
     {
         StartCoroutine(ExploreArea());
+    }
+
+    public void Initialize(StorageFoundResources storageFoundResources)
+    {
+        _storageFoundResources = storageFoundResources;
     }
 
     private void ResearchResource()
@@ -28,7 +32,7 @@ public class Scanner : MonoBehaviour
         {
             if (collider.TryGetComponent(out Resource resource))
             {
-                ResourceFound?.Invoke(resource);
+                _storageFoundResources.TryAddResourceInQueue(resource);
             }
         }
     }

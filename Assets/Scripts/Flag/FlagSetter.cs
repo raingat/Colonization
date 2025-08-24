@@ -4,6 +4,8 @@ public class FlagSetter : MonoBehaviour
 {
     [SerializeField] private Flag _prefab;
 
+    private Base _base;
+
     private Flag _activeFlag;
 
     private float _heightPlace;
@@ -15,6 +17,8 @@ public class FlagSetter : MonoBehaviour
         _isFlagActive = false;
 
         _heightPlace = _prefab.transform.position.y;
+
+        _base = GetComponent<Base>();
     }
 
     public Flag Build(Vector3 point)
@@ -32,6 +36,8 @@ public class FlagSetter : MonoBehaviour
             _activeFlag.Built += IsBuilt;
 
             _isFlagActive = true;
+
+            _base.BuildFlag(_activeFlag);
 
             return _activeFlag;
         }

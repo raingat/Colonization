@@ -11,19 +11,23 @@ public class Player : MonoBehaviour
     private Ray ray;
     private RaycastHit _raycastHit;
 
-    private Base _base;
+    private FlagSetter _flagSetter;
 
-    private void FixedUpdate()
+    private void Update()
     {
         ray = _camera.ScreenPointToRay(Input.mousePosition);
 
         if (_inputReader.IsLeftMouseButton() && Physics.Raycast(ray, out _raycastHit, Mathf.Infinity, _enableLayerMask))
         {
-            if (_raycastHit.transform.TryGetComponent(out Base target))
-                _base = target;
+            if (_raycastHit.transform.TryGetComponent(out FlagSetter flagSetter))
+            {
+                _flagSetter = flagSetter;
+            }
 
-            if (_raycastHit.transform.TryGetComponent(out Ground _) && _base != null)
-                _base.BuildFlag(_raycastHit.point);
+            if (_raycastHit.transform.TryGetComponent(out Ground _) && _flagSetter != null)
+            {
+                _flagSetter.Build(_raycastHit.point);
+            }
         }
     }
 }

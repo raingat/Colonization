@@ -27,7 +27,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 45846003296498234}
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -7.23}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -245,8 +245,8 @@ GameObject:
   - component: {fileID: 6513610676681810337}
   - component: {fileID: 3869169986486847330}
   - component: {fileID: 1814521463112313556}
-  - component: {fileID: 2128434186759111375}
   - component: {fileID: 578151241201248779}
+  - component: {fileID: 8259140663052146828}
   m_Layer: 7
   m_Name: Base
   m_TagString: Untagged
@@ -357,10 +357,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49bc4183c591bf748a260d82bbe6af1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spawner: {fileID: 4829033717301631036}
   _botRetreiver: {fileID: 6647753740505694042}
   _startBotCount: 3
   _maxBotCount: 5
+  _storageFoundResources: {fileID: 0}
 --- !u!114 &3869169986486847330
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -380,6 +380,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _waitTime: 1
+  _storageFoundResources: {fileID: 0}
 --- !u!114 &1814521463112313556
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -393,18 +394,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _base: {fileID: 6513610676681810337}
---- !u!114 &2128434186759111375
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4737105264583313281}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8709fcdba4b03aa45b4ad8d917bd6a50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &578151241201248779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -418,6 +407,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prefab: {fileID: 2953478161925533692, guid: 7f9d57f0fe3c38b4290b7475e6aacfe6, type: 3}
+--- !u!114 &8259140663052146828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4737105264583313281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b38fa16da3ef71438c2a5536e2e7d6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pool: {fileID: 4544397487572461850}
+  _places:
+  - {fileID: 1046522911065092153}
+  - {fileID: 2921887514643111886}
+  - {fileID: 5718093314964214302}
+  _heightSpawn: 1
+  _baseSpawner: {fileID: 0}
 --- !u!1 &5222632411394340486
 GameObject:
   m_ObjectHideFlags: 0
@@ -472,7 +480,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6097270945519588148}
-  - component: {fileID: 4829033717301631036}
   m_Layer: 0
   m_Name: Bot Spawner
   m_TagString: Untagged
@@ -495,24 +502,6 @@ Transform:
   m_Father: {fileID: 7030617450325367385}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4829033717301631036
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5508823188308544411}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b38fa16da3ef71438c2a5536e2e7d6b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _pool: {fileID: 4544397487572461850}
-  _places:
-  - {fileID: 1046522911065092153}
-  - {fileID: 2921887514643111886}
-  - {fileID: 5718093314964214302}
-  _heightSpawn: 1
 --- !u!1 &5803498857982110631
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,11 +9,13 @@ public class Bot : MonoBehaviour
 
     [SerializeField] private float _timeRotate;
 
-    [SerializeField] private Base _prefabBase;
+    private BaseSpawner _baseSpawner;
 
     private Transform _collectionPoint;
 
     private Resource _currentResource;
+
+    private float _heightSpawnNewBase = 0.5f;
 
     private bool _isTransferResource;
 
@@ -24,6 +26,11 @@ public class Bot : MonoBehaviour
     private void Awake()
     {
         _isTransferResource = false;
+    }
+
+    public void Initialize(BaseSpawner baseSpawner)
+    {
+        _baseSpawner = baseSpawner;
     }
 
     public void SetCollectionPoint(Transform point)
@@ -84,7 +91,9 @@ public class Bot : MonoBehaviour
     {
         flag.Disable();
 
-        Base newBase = Instantiate(_prefabBase, new Vector3(flag.transform.position.x, _prefabBase.transform.position.y, flag.transform.position.z), Quaternion.identity);
+        Base newBase = _baseSpawner.Spawn();
+
+        newBase.transform.position = new Vector3(flag.transform.position.x, _heightSpawnNewBase, flag.transform.position.z);
 
         flag = null;
 

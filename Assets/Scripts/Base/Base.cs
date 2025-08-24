@@ -1,26 +1,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(StorageFoundResources))]
-[RequireComponent(typeof(FlagSetter))]
+[RequireComponent(typeof(Scanner))]
 public class Base : MonoBehaviour
 {
-    [SerializeField] private GenericSpawner<Bot> _spawner;
-
     [SerializeField] private BotRetreiver _botRetreiver;
 
     [SerializeField] private int _startBotCount;
     [SerializeField] private int _maxBotCount;
 
-    private List<Bot> bots = new();
+    [SerializeField] private StorageFoundResources _storageFoundResources;
+
+    private List<Bot> _bots = new();
 
     private Queue<Bot> _enableBot = new();
 
+    private Scanner _scanner;
+
+    private BotSpawner _botSpawner;
+
     private Warehouse _warehouse;
 
-    private StorageFoundResources _storageFoundResources;
-
-    private FlagSetter _flagSetter;
     private Flag _flag;
 
     private int _currentCountBot;
@@ -37,9 +37,9 @@ public class Base : MonoBehaviour
     {
         _isBuildNewBase = false;
 
-        _flagSetter = GetComponent<FlagSetter>();
+        _scanner = GetComponent<Scanner>();
+        _botSpawner = GetComponent<BotSpawner>();
         _warehouse = GetComponent<Warehouse>();
-        _storageFoundResources = GetComponent<StorageFoundResources>();
     }
 
     private void OnEnable()
@@ -49,7 +49,7 @@ public class Base : MonoBehaviour
 
     private void Start()
     {
-        CreateBot(_startBotCount);
+        CreateMultiplyBot(_startBotCount);
     }
 
     private void Update()
@@ -74,7 +74,7 @@ public class Base : MonoBehaviour
         {
             _warehouse.RemoveResource(_costCreateBot);
 
-            CreateBot();
+            TryCreateBot();
         }
 
         Work();
@@ -85,24 +85,32 @@ public class Base : MonoBehaviour
         _botRetreiver.BotCome -= HandleDelivery;
     }
 
+    public void Initialize(StorageFoundResources storageFoundResources, BaseSpawner baseSpawner)
+    {
+        _storageFoundResources = storageFoundResources;
+        _scanner.Initialize(storageFoundResources);
+        _botSpawner.Initialize(baseSpawner);
+    }
+
     public void GetBot(Bot bot)
     {
         _currentCountBot++;
 
         bot.SetCollectionPoint(_botRetreiver.transform);
 
-        bots.Add(bot);
+        _bots.Add(bot);
 
         _enableBot.Enqueue(bot);
     }
 
     public bool IsMineBot(Bot bot)
     {
-        return bots.Contains(bot);
+        return _bots.Contains(bot);
     }
-    public void BuildFlag(Vector3 point)
+
+    public void BuildFlag(Flag flag)
     {
-        _flag = _flagSetter.Build(point);
+        _flag = flag;
 
         _isBuildNewBase = true;
     }
@@ -113,6 +121,9 @@ public class Base : MonoBehaviour
             return;
 
         Resource resource = _storageFoundResources.GetResource();
+
+        if (resource == null)
+            return;
 
         if (resource == null)
             return;
@@ -135,50 +146,49 @@ public class Base : MonoBehaviour
         resource.Collect();
     }
 
-    private void CreateBot(int count)
+    private void CreateMultiplyBot(int count)
     {
         for (int i = 0; i < count; i++)
         {
-            if (_currentCountBot < _startBotCount)
-            {
-                Bot bot = _spawner.Spawn();
-
-                bot.SetCollectionPoint(_botRetreiver.transform);
-
-                bot.TransferringToNewBase += TransferToNewBase;
-
-                _enableBot.Enqueue(bot);
-
-                bots.Add(bot);
-
-                _currentCountBot++;
-            }
+            TryCreateBot();
         }
     }
 
-    private void CreateBot()
+    private void TryCreateBot()
     {
         if (_currentCountBot < _maxBotCount)
         {
-            Bot bot = _spawner.Spawn();
+            Bot bot = CreateBot();
 
-            bot.SetCollectionPoint(_botRetreiver.transform);
-
-            bot.TransferringToNewBase += TransferToNewBase;
-
-            _enableBot.Enqueue(bot);
-
-            bots.Add(bot);
+            HandleBot(bot);
 
             _currentCountBot++;
         }
+    }
+
+    private Bot CreateBot()
+    {
+        Bot bot = _botSpawner.Spawn();
+
+        _enableBot.Enqueue(bot);
+
+        _bots.Add(bot);
+
+        return bot;
+    }
+
+    private void HandleBot(Bot bot)
+    {
+        bot.SetCollectionPoint(_botRetreiver.transform);
+
+        bot.TransferringToNewBase += TransferToNewBase;
     }
 
     private void TransferToNewBase(Bot bot, Base newBase)
     {
         bot.TransferringToNewBase -= TransferToNewBase;
 
-        bots.Remove(bot);
+        _bots.Remove(bot);
 
         newBase.GetBot(bot);
     }
